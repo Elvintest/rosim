@@ -1,0 +1,10 @@
+{
+  "simulation": "appsellerTest.BasicSimulation",
+  "simulationId": "basicsimulation",
+  "start": 1619641273421,
+  "description": "",
+  "scenarios": ["Scenario Name"],
+  "assertions": [
+
+  ]
+}
