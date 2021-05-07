@@ -10,7 +10,7 @@ import Requests._
 import io.gatling.core.structure.ScenarioBuilder
 
 import scala.language.postfixOps
-
+import scala.annotation.tailrec
 
 
 class BasicSimulation extends Simulation {
@@ -26,12 +26,21 @@ class BasicSimulation extends Simulation {
     )
 //  val records: Seq[Map[String, Any]] = csv("./src/test/resources/data/users.csv").readRecords
   val scn =
-    scenario(f"Scenario Name") //
+    scenario(f"appseller load test") //
 //      .exec(listCountries)
-      .pause(7) // Обратите внимание, что Gatling записал паузы в реальном времени
+      .pause(7) // записал паузы в реальном времени
       .exec(login)
       .exec(userInfo)
+      .exec(swapOutlet)
+      .exec(addressSearchString)
+      .exec(addressSearchCode)
+      .exec(logEvent)
+      .exec(checkCode)
+      .exec(listDocuments)
+      .exec(simAllowance)
+      .exec(logout)
 
-  setUp(scn.inject(constantUsersPerSec(1) during(2 seconds)).protocols(httpProtocol))
+//      .exec(refreshToken)
+  setUp(scn.inject(constantUsersPerSec(5) during(10 seconds)).protocols(httpProtocol))
 
 }
