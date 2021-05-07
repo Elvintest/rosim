@@ -26,9 +26,9 @@ class BasicSimulation extends Simulation {
     )
 //  val records: Seq[Map[String, Any]] = csv("./src/test/resources/data/users.csv").readRecords
   val scn =
-    scenario(f"appseller load test") //
+    scenario(f"appsaler load test") //
 //      .exec(listCountries)
-      .pause(7) // записал паузы в реальном времени
+      .pause(2) // записал паузы в реальном времени
       .exec(login)
       .exec(userInfo)
       .exec(swapOutlet)
@@ -36,11 +36,11 @@ class BasicSimulation extends Simulation {
       .exec(addressSearchCode)
       .exec(logEvent)
       .exec(checkCode)
+      .exec(refreshToken)
       .exec(listDocuments)
       .exec(simAllowance)
       .exec(logout)
 
-//      .exec(refreshToken)
-  setUp(scn.inject(constantUsersPerSec(5) during(10 seconds)).protocols(httpProtocol))
+  setUp(scn.inject(constantUsersPerSec(1) during(10 seconds)).protocols(httpProtocol))
 
 }

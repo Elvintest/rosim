@@ -21,6 +21,7 @@ object Requests {
   }
 
   val randomNumber = scala.util.Random // генерируем рандомный int
+  val token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dvdXRUaW1lIjoxNjIwNDA2NzUxLCJ0b2tlblJlZnJlc2hUaW1lIjoxNjIyOTk1MTUxLCJsb2dpblRpbWUiOjE2MjA0MDMxNTEsImV4cCI6MTYyMDQxMzk1MSwidXNlck5hbWUiOiJ0ZXN0MSIsInVzZXJJZCI6MSwiZGV2aWNlSWQiOiJ0aGVfc2Vjb25kX29uZSJ9.iZVFbg3aIsMHJ-JrwE5GIA5nwoArGifGGcyr7eRwDR0"
 
   val users = csv("./src/test/resources/data/users.csv").circular // users for loading
   val outlets = csv("./src/test/resources/data/outlets.csv").circular // outlets
@@ -32,7 +33,7 @@ object Requests {
     .check(status.is(200))
 
   val addressSearchCode = http("listCountries") // searching address by code
-    .get(ports("ADDRESS") + s"/secured/address/country/" + randomString(6))
+    .get(ports("ADDRESS") + s"/secured/address/country/" + randomString(3))
     .check(status.is(200))
 
   val login = feed(users) // data from users.csv, login
@@ -47,29 +48,30 @@ object Requests {
         |    "deviceId": "the_second_one"
         |}""".stripMargin)).asJson
       .check(status.is(200))
-      .check(jmesPath("data.token").saveAs("token")) //extracting token from login response
+//      .check(jmesPath("data.token").saveAs("token")) //extracting token from login response
     )
   val userInfo = http("userInfo") // getting user profile info
 
     .get(ports("AUTH") + "/secured/user/")
-    .header("Authorization", "Bearer " + "${token}")
+    .header("Authorization", "Bearer " + s"${token}")
     .check(status.is(200))
   val swapOutlet = feed(outlets) // data from outlets.csv, outlet
     .exec(http("swapOutlet") // changing user's outlet
     .put(ports("AUTH") + "/secured/user/change/outlet").body(StringBody(
     """ ${outlet}
       """.stripMargin)).asJson
-    .header("Authorization", "Bearer " + "${token}")
+    .header("Authorization", "Bearer " + s"${token}")
     .check(status.is(200))
+      .check(status.is(409))
     )
 
-  val refreshToken = http("userInfo") // getting user profile info
-
+  val refreshToken = http("refreshToken") // getting user profile info
     .post(ports("AUTH") + "/public/auth/token/refresh").body(StringBody(
-    """{
-      "accessToken":"${token}"
+    """s{
+      "accessToken":${token}"
       }""".stripMargin)).asJson
     .check(status.is(200))
+    .check(status.is(401))
 
   val logEvent = http("userInfo") // registration some events
     .post(ports("REPORT") + "/secured/log/event").body(StringBody(
@@ -80,7 +82,7 @@ object Requests {
     "addInformationField": "test_information"
       }""".stripMargin)).asJson
     .check(status.is(200))
-    .header("Authorization", "Bearer " + "${token}")
+    .header("Authorization", "Bearer " + s"${token}")
 
   val listDocuments = http("listDocuments") // get list mandatory docs
     .get(ports("TELEDEALER") + "/public/fs/template_document/list")
@@ -89,7 +91,7 @@ object Requests {
   val checkCode = feed(users) // data from users.csv
     .exec(http("checkCode") // checking sms code
     .get(ports("SMS") + "/public/sms/check/code?code=" + randomNumber.nextInt(10000) + "&msisdn=${log}")
-    .check(status.is(200))
+    .check(status.is(409))
     )
   val simAllowance = http("simAllowance") // checking a sim allowance for sale
 
@@ -99,12 +101,12 @@ object Requests {
     "surname":${randomString(6)},
     "documentNumber":${randomString(6)}
 }""".stripMargin)).asJson
-    .header("Authorization", "Bearer " + "${token}")
+    .header("Authorization", "Bearer " + s"${token}")
     .check(status.is(200))
 
   val logout = http("logout") // execute logout
     .get(ports("AUTH") + "/secured/auth/logout")
-    .header("Authorization", "Bearer " + "${token}")
+    .header("Authorization", "Bearer " + s"${token}")
     .check(status.is(200))
 }
 
