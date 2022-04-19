@@ -1,0 +1,10 @@
+{
+  "simulation": "Rosim.BasicSimulation",
+  "simulationId": "basicsimulation",
+  "start": 1650299562753,
+  "description": "",
+  "scenarios": ["load test"],
+  "assertions": [
+
+  ]
+}
