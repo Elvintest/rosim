@@ -8,7 +8,6 @@ object Requests {
 
   val users = csv("./src/test/resources/data/users.csv").circular // users for loading
   val outlets = csv("./src/test/resources/data/outlets.csv").circular // outlets
-  val ports = collection.mutable.Map("ADDRESS" -> "30902", "AUTH" -> "30904", "REPORT" -> "30905", "TELEDEALER" -> "30906", "SIM" -> "30901", "SMS" -> "30903") // services ports
 
 
   //Rosim requests
