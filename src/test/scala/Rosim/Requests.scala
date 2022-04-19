@@ -6,9 +6,6 @@ import io.gatling.http.Predef._
 
 object Requests {
 
-  val users = csv("./src/test/resources/data/users.csv").circular // users for loading
-  val outlets = csv("./src/test/resources/data/outlets.csv").circular // outlets
-
 
   //Rosim requests
   val accessibleDatesBudjet = http("accessibleDatesBudget")
