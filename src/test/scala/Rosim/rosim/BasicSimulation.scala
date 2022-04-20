@@ -24,7 +24,7 @@ class BasicSimulation extends Simulation {
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0"
     )
 
-//  val records: Seq[Map[String, Any]] = csv("./src/test/resources/data/users.csv").readRecords
+
   val scn: ScenarioBuilder =
     scenario(f"load test") //
       .exec(facilityRentalList)
