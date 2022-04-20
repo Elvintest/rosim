@@ -1,28 +1,31 @@
 package Rosim
 
 import io.gatling.core.Predef._
+import io.gatling.core.feeder.BatchableFeederBuilder
+import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
+import io.gatling.http.request.builder.HttpRequestBuilder
 
 
 object Requests {
   //feeders
-  val users = csv("data/users.csv").circular
+  val users: BatchableFeederBuilder[String]#F = csv("data/users.csv").circular
 
 
   //Rosim requests
-  val accessibleDatesBudjet = http("accessibleDatesBudget")
+  val accessibleDatesBudjet: HttpRequestBuilder = http("accessibleDatesBudget")
     .get("/public/dashboard/objectsInBudgetDates")
     .check(status.is(200))
 
-  val accibleDatesTurnOver = http("accibleDatesTurnOver")
+  val accibleDatesTurnOver: HttpRequestBuilder = http("accibleDatesTurnOver")
     .get("/public/dashboard/objectsInTurnoverDates")
     .check(status.is(200))
 
-  val dashboardObjectsInTreasuryNoParameters = http("objectsInTreasury")
+  val dashboardObjectsInTreasuryNoParameters: HttpRequestBuilder = http("objectsInTreasury")
     .get("/public/dashboard/objectsInTreasury")
     .check(status.is(200))
 
-  val dashboardObjectsInTreasuryWIthParameters = feed(Array(
+  val dashboardObjectsInTreasuryWIthParameters: ChainBuilder = feed(Array(
     Map("from" -> s"2020-11-08", "to" -> s"2022-11-09"),
     Map("from" -> s"2020-12-12", "to" -> s"2021-11-09")
   ).circular)
@@ -31,15 +34,15 @@ object Requests {
       .check(status.is(200)))
 
 
-  val rentContractDates = http("rentContractDates")
+  val rentContractDates: HttpRequestBuilder = http("rentContractDates")
     .get("/public/dashboard/rentContractDates")
     .check(status.is(200))
 
-  val privatizedObjectDates = http("privatizedObjectDates")
+  val privatizedObjectDates: HttpRequestBuilder = http("privatizedObjectDates")
     .get("/public/dashboard/privatizedObjectsDates")
     .check(status.is(100))
 
-  val dashboardObjectsBudget = feed(Array(
+  val dashboardObjectsBudget: ChainBuilder = feed(Array(
     Map("year" -> "2019"),
     Map("year" -> "2020")
   ).circular)
@@ -48,54 +51,55 @@ object Requests {
       .check(status.is(200)))
 
 
-  val objectsInTurnover = http("objectsInTurnover")
+  val objectsInTurnover: HttpRequestBuilder = http("objectsInTurnover")
     .get("/public/dashboard/objectsInTurnover?year=2022")
     .check(status.is(200))
 
-  val dashBoardRentContracts = http("dashBoardRentContracts")
+  val dashBoardRentContracts: HttpRequestBuilder = http("dashBoardRentContracts")
     .get("/public/dashboard/rentContracts?date=2021-11-08")
     .check(status.is(200))
 
-  val dashboardPrivatizedObjects = http("dashboardPrivatizedObjects")
+  val dashboardPrivatizedObjects: HttpRequestBuilder = http("dashboardPrivatizedObjects")
     .get("/public/dashboard/privatizedObjects?year=2021")
     .check(status.is(200))
 
-  val regionMapAggregate = http("regionMapAggregate")
+  val regionMapAggregate: HttpRequestBuilder = http("regionMapAggregate")
     .get("/public/datamart/getRegionMapAggregate")
     .check(status.is(200))
 
-  val regionMapAggregateParameterized = feed(Array(
+  val regionMapAggregateParameterized: ChainBuilder = feed(Array(
     Map("region" -> "RU-SA"),
   ).circular)
     .exec(http("dashboardObjectsBudget")
       .get("/public/datamart/getRegionMapAggregate/${region}")
       .check(status.is(200)))
 
-  val districtMapAggregate = http("districtMapAggregate")
+  val districtMapAggregate: HttpRequestBuilder = http("districtMapAggregate")
     .get("/public/filter/municipalDistricts")
     .check(status.is(200))
-  val npaContent = http("npaContent")
+
+  val npaContent: HttpRequestBuilder = http("npaContent")
     .get("/public/content/laws")
     .check(status.is(200))
 
-  val faqContent = http("faqContent")
+  val faqContent: HttpRequestBuilder = http("faqContent")
     .get("/public/content/faq")
     .check(status.is(200))
 
-  val sectionInfo = http("sectionInfo")
+  val sectionInfo: HttpRequestBuilder = http("sectionInfo")
     .get("/public/content/sectionInfo")
     .check(status.is(200))
 
-  val sendMessageItsm = http("sendMessageItsm")
+  val sendMessageItsm: HttpRequestBuilder = http("sendMessageItsm")
     .post("/public/message/itsm/send").formParam("name","subject")
     .check(status.is(200))
 
-  val sendMessageItsmFilesIncluded = http("sendMessageItsmFilesIncluded")
+  val sendMessageItsmFilesIncluded: HttpRequestBuilder = http("sendMessageItsmFilesIncluded")
     .post("/public/message/itsm/send").formParam("name","subject")
     .formUpload("filename","file.pdf") // Здесь в filePath указать путь (относительный) до файла, в папке data
     .check(status.is(200))
 
-  val facilityRentalList = http("facilityRentalList")
+  val facilityRentalList: HttpRequestBuilder = http("facilityRentalList")
     .post("/public/datamart/facilityRental/list?sort=&page=0&size=10")
     .body(StringBody("""{
   "subjectCodes": [
@@ -134,35 +138,35 @@ object Requests {
 }"""))
     .check(status.is(200))
 
-  val facilityRental = http("facilityRental")
+  val facilityRental: HttpRequestBuilder = http("facilityRental")
     .get("/public/datamart/facilityRental?id=3246344a-d5be-473f-8021-60ef5b67c7f6")
     .check(status.is(200))
 
   // url другой + нужен токен наверное для этой группы
-  val techNotifications = http("techNotifications")
+  val techNotifications: HttpRequestBuilder = http("techNotifications")
     .get("/content/secured/techNotifications/actual")
     .check(status.is(200))
 
-  val confirmNotificationsDocuments = http("confirmNotifications")
+  val confirmNotificationsDocuments: HttpRequestBuilder = http("confirmNotifications")
     .get("/secured/user/messages/confirmation/documents?esiaUserId=1000466580")
     .check(status.is(200))
 
-  val countUnreadMessages = http("countUnreadMessages")
+  val countUnreadMessages: HttpRequestBuilder = http("countUnreadMessages")
     .get("/secured/user/messages/unread/count?esiaUserId=1000466580")
     .check(status.is(200))
 
-  val userSubscriptions = feed(users)
+  val userSubscriptions: ChainBuilder = feed(users)
   .exec(http("userSubscriptions")
     .get("/secured/subscriptions/user/${userId}")
     .check(status.is(200)))
 
-  val userDrafts = feed(users)
+  val userDrafts: ChainBuilder = feed(users)
     .exec(http("userDrafts")
       .get("/secured/lifeSituations/drafts/${userId}")
       .check(status.is(200)))
 
 
-  val insertDraft = http("insertDraft")
+  val insertDraft: HttpRequestBuilder = http("insertDraft")
     .post("/secured/lifeSituations/saveDraft?userId=1000466580")
     .body(StringBody("""{
   "appealParams": {
