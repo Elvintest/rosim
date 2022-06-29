@@ -29,6 +29,10 @@ class BasicSimulation extends Simulation {
     scenario(f"load test") //
       .exec(facilityRentalList)
 
-  setUp(scn.inject(constantUsersPerSec(1) during(1 seconds)).protocols(httpProtocol))
+
+
+  setUp(scn.inject(constantUsersPerSec(10) during (10 seconds)).protocols(httpProtocol))
+
+//    .assertions(global.successfulRequests.percent.is(95))
 
 }

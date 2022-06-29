@@ -91,7 +91,8 @@ object Requests {
     .check(status.is(200))
 
   val sendMessageItsm: HttpRequestBuilder = http("sendMessageItsm")
-    .post("/public/message/itsm/send").formParam("name","subject")
+    .post("/public/message/itsm/send")
+    .formParam("name","subject")
     .check(status.is(200))
 
   val sendMessageItsmFilesIncluded: HttpRequestBuilder = http("sendMessageItsmFilesIncluded")
@@ -215,6 +216,325 @@ object Requests {
     "objectsMissing": true
   }
 }"""))
+//    .header("Authorization", "Bearer " + s"df6d7f6d")
+    .check(status.is(200))
+
+// url https://t-cstmr-iamservice-02.rosim.novalocal:10443
+  val fileUpload: HttpRequestBuilder = http("fileUpload")
+    .post("/secured/file/upload")
+    .check(status.is(200))
+
+  val getUserContact: HttpRequestBuilder = http("getUserContact")
+    .get("/ros/tenant-contract/api/v1/user")
+    .check(status.is(200))
+
+  val confirmationReceiving: HttpRequestBuilder = http("confirmationReceiving")
+    .post("/secured/user/messages/confirmation/documents")
+    .body(StringBody("""{
+  "messageIds": [
+    "93e7a751-7cc5-4fc2-9f3e-9b3d703bde62"
+  ],
+  "esiaUserId": "1000466562",
+  "contractNumber": "null",
+  "contractDate": "",
+  "userName": "Иванов Иван Иванович",
+  "organizationName": "Иванов Иван Иванович",
+  "inn": "295929833306",
+  "attachment": {
+    "fileLink": "fileStore/6e0b5421-e131-40cc-a527-6af4a239d1d2/ПЭП.pdf",
+    "fileName": "ПЭП.pdf",
+    "fileType": "ПЭП"
+  }
+}"""))
+    .check(status.is(200))
+
+  val getParametersApplication: HttpRequestBuilder = http("getParametersApplication")
+    .get("/ros/tenant-contract/api/v1/settings")
+    .check(status.is(200))
+
+  val getDictionaryCollection: HttpRequestBuilder = http("getDictionaryCollection")
+    .get("/ros/tenant-contract/api/v1/dictionary-collection")
+    .check(status.is(200))
+
+  val getPaymentInformation: HttpRequestBuilder = http("getPaymentInformation")
+    .get("/ros/tenant-contract/api/v1/widget/payment")
+    .check(status.is(200))
+
+  val getPaymentCalendar: ChainBuilder = feed(Array(
+    Map("from" -> s"2020-11-08", "to" -> s"2022-11-09"),
+    Map("from" -> s"2020-12-12", "to" -> s"2021-11-09")
+  ).circular)
+    .exec(http("objectsInTreasury")
+      .get("/ros/tenant-contract/api/v1/widget/payment-calendar?accrualEndDateFrom={from}&accrualEndDateTo={to}")
+      .check(status.is(200)))
+
+  val printLifeSituationOne: HttpRequestBuilder = http("printLifeSituationOne")
+    .post("/tc-ufs/secured/lifeSituations/printLifeSituationOne")
+    .body(StringBody("""{
+  "one": {
+    "type": "FL",
+    "name": "",
+    "document": "0007 000003",
+    "fio": "Иванов Иван Иванович",
+    "inn": "295929833306",
+    "ogrn": "",
+    "ogrnip": "",
+    "kpp": "",
+    "phone": "+7(904)6103001",
+    "email": "ivanovii555@mail.ru",
+    "address": "454007, г Челябинск, пр-кт Ленина, дом 10, кв. 10",
+    "isEDM": true,
+    "isTenant": true,
+    "esiaUserId": "1000466562",
+    "confirmationDocId": ""
+  },
+  "two": {
+    "appealParams": {
+      "appealTitle": "Выкупить земельный участок без торгов",
+      "appealType": "BUY_WITHOUT_BIDDING",
+      "appealDate": "2022-06-20T13:46:31.000+03:00"
+    },
+    "senderInfo": {
+      "senderName": "Иванов Иван Иванович",
+      "senderInn": "295929833306",
+      "senderType": "FL"
+    },
+    "commonParams": {
+      "rosimPart": "RI_TU_107",
+      "representativeInfo": {
+        "representativeFio": "Иванов Иван Иванович",
+        "representativePosition": ""
+      },
+      "dealRegistrationInfo": {
+        "isDealRegistration": false,
+        "isPaperContract": false,
+        "deliveryMethodReg": "",
+        "deliveryMethodDoc": ""
+      },
+      "attachments": [],
+      "comment": ""
+    },
+    "specialParams": {
+      "statementInfo": {
+        "senderAddress": "454007, г Челябинск, пр-кт Ленина, дом 10, кв. 10",
+        "senderPhone": "+79046103001",
+        "senderEmail": "ivanovii555@mail.ru",
+        "cadastralNumber": "74:37:0209001:0410",
+        "landArea": 20,
+        "landAddress": "Россия, обл. Челябинская, г. Южноуральск, ул. Спортивная, д. 1",
+        "purposeOfUse": "RI_LAND_TYPE_-1000",
+        "objectsCadastralNumbers": [],
+        "articleClose": {
+          "articles": [
+            "ARTICLE_1"
+          ],
+          "articleReason": ""
+        },
+        "decisionInfo": []
+      }
+    }
+  }
+}"""))
+    .check(status.is(200))
+
+  val saveEDS: HttpRequestBuilder = http("saveEDS")
+    .post("/secured/lifeSituations/saveEDS")
+    .body(StringBody("""{
+  "one": {
+    "type": "FL",
+    "name": "",
+    "document": "0007 000003",
+    "fio": "Иванов Иван Иванович",
+    "inn": "295929833306",
+    "ogrn": "",
+    "ogrnip": "",
+    "kpp": "",
+    "phone": "+7(904)6103001",
+    "email": "ivanovii555@mail.ru",
+    "address": "454007, г Челябинск, пр-кт Ленина, дом 10, кв. 10",
+    "isEDM": true,
+    "isTenant": true,
+    "esiaUserId": "1000466562",
+    "confirmationDocId": ""
+  },
+  "two": {
+    "appealParams": {
+      "appealTitle": "Выкупить земельный участок без торгов",
+      "appealType": "BUY_WITHOUT_BIDDING",
+      "appealDate": "2022-06-20T13:46:31.000+03:00"
+    },
+    "senderInfo": {
+      "senderName": "Иванов Иван Иванович",
+      "senderInn": "295929833306",
+      "senderType": "FL"
+    },
+    "commonParams": {
+      "rosimPart": "RI_TU_107",
+      "representativeInfo": {
+        "representativeFio": "Иванов Иван Иванович",
+        "representativePosition": ""
+      },
+      "dealRegistrationInfo": {
+        "isDealRegistration": false,
+        "isPaperContract": false,
+        "deliveryMethodReg": "",
+        "deliveryMethodDoc": ""
+      },
+      "attachments": [
+        {
+          "fileLink": "fileStore/e33dce7b-1818-41b6-9e72-36b880ef33dd/Выкупить земельный участок без торгов.pdf",
+          "fileName": "Выкупить земельный участок без торгов.pdf",
+          "fileType": "Заявление"
+        }
+      ],
+      "comment": ""
+    },
+    "specialParams": {
+      "statementInfo": {
+        "senderAddress": "454007, г Челябинск, пр-кт Ленина, дом 10, кв. 10",
+        "senderPhone": "+79046103001",
+        "senderEmail": "ivanovii555@mail.ru",
+        "cadastralNumber": "74:37:0209001:0410",
+        "landArea": "double;20.00",
+        "landAddress": "Россия, обл. Челябинская, г. Южноуральск, ул. Спортивная, д. 1",
+        "purposeOfUse": "RI_LAND_TYPE_-1000",
+        "objectsCadastralNumbers": [],
+        "articleClose": {
+          "articles": [
+            "ARTICLE_1"
+          ],
+          "articleReason": ""
+        },
+        "decisionInfo": []
+      }
+    }
+  }
+}"""))
+    .check(status.is(200))
+
+  val LifeSituationSend: HttpRequestBuilder = http("LifeSituationSend")
+    .post("/secured/lifeSituations/send?userId=1000466562")
+    .body(StringBody("""{
+  "appealParams": {
+    "appealTitle": "Выкупить земельный участок без торгов",
+    "appealType": "BUY_WITHOUT_BIDDING",
+    "appealDate": "2022-06-20T13:46:31.000+03:00"
+  },
+  "senderInfo": {
+    "senderName": "Иванов Иван Иванович",
+    "senderInn": "295929833306",
+    "senderType": "FL"
+  },
+  "commonParams": {
+    "rosimPart": "RI_TU_107",
+    "representativeInfo": {
+      "representativeFio": "Иванов Иван Иванович",
+      "representativePosition": ""
+    },
+    "dealRegistrationInfo": {
+      "isDealRegistration": false,
+      "isPaperContract": false,
+      "deliveryMethodReg": "",
+      "deliveryMethodDoc": ""
+    },
+    "attachments": [
+      {
+        "fileLink": "fileStore/e33dce7b-1818-41b6-9e72-36b880ef33dd/Выкупить земельный участок без торгов.pdf",
+        "fileName": "Выкупить земельный участок без торгов.pdf",
+        "fileType": "Заявление"
+      },
+      {
+        "fileLink": "fileStore/5c880b3d-a583-4f7b-a218-6de9443c38b9/ПЭП.pdf",
+        "fileName": "ПЭП.pdf",
+        "fileType": "ПЭП"
+      }
+    ],
+    "comment": ""
+  },
+  "specialParams": {
+    "statementInfo": {
+      "senderAddress": "454007, г Челябинск, пр-кт Ленина, дом 10, кв. 10",
+      "senderPhone": "+79046103001",
+      "senderEmail": "ivanovii555@mail.ru",
+      "cadastralNumber": "74:37:0209001:0410",
+      "landArea": 20,
+      "landAddress": "Россия, обл. Челябинская, г. Южноуральск, ул. Спортивная, д. 1",
+      "purposeOfUse": "RI_LAND_TYPE_-1000",
+      "objectsCadastralNumbers": [],
+      "articleClose": {
+        "articles": [
+          "ARTICLE_1"
+        ],
+        "articleReason": ""
+      },
+      "decisionInfo": []
+    }
+  }
+}"""))
+    .check(status.is(200))
+
+  val LifeSituationDelete: HttpRequestBuilder = http("LifeSituationDelete")
+    .post("/secured/lifeSituations/deleteDraft?userId=1000466562")
+    .body(StringBody("""{"appealParams":{"appealType":"BUY_WITHOUT_BIDDING"}}"""))
+    .check(status.is(200))
+
+  val getUserMessages: ChainBuilder = feed(users)
+    .exec(http("getUserMessages")
+      .get("/secured/user/messages/?esiaUserId={userId}&page=0&size=10000")
+      .check(status.is(200)))
+
+  val fileDownload: HttpRequestBuilder = http("fileDownload")
+    .get("/public/file/download?fileLink=fileStore/89969a1f-9fd0-4862-9d8a-488f1ee381c2/ПЭП.pdf")
+    .check(status.is(200))
+
+  val getSingleMessage: HttpRequestBuilder = http("getSingleMessage")
+    .get("/secured/user/messages/2fa4ddd9-220a-45fa-ac7c-d1bfde20cd31?esiaUserId=1000466562&messageType=appeal_message")
+    .check(status.is(200))
+
+  val updateStatus: HttpRequestBuilder = http("updateStatus")
+    .put("/secured/user/messages/2fa4ddd9-220a-45fa-ac7c-d1bfde20cd31?interactionType=appealExtraInfo&esiaUserId=1000466562&messageType=appeal_message&statusId=19308")
+    .check(status.is(200))
+
+  val getListContracts: HttpRequestBuilder = http("getListContracts")
+    .get("/ros/tenant-contract/api/v1/contract")
+    .check(status.is(200))
+
+  val getRentContract: ChainBuilder = feed(Array(
+    Map("contractId" -> s"1"),
+    Map("contractId" -> s"2")
+  ).circular)
+    .exec(http("getRentContract")
+      .get("/ros/tenant-contract/api/v1/contract/{contractId}")
+      .check(status.is(200)))
+
+  val getInformationBoundDocuments: HttpRequestBuilder = http("getInformationBoundDocuments")
+    .post("/secured/user/messages/documents")
+    .body(StringBody("""{
+  "esiaUserId": "string",
+  "contractNumber": "string",
+  "contractDate": "2022-06-20"
+}"""))
+    .check(status.is(200))
+
+  val getListRentContracts: HttpRequestBuilder = http("getListRentContracts")
+    .get("/ros/tenant-contract/api/v1/facility-rental?contractId=b68553e1-9539-11ec-8118-0050569352f5&page=0&size=200")
+    .check(status.is(200))
+
+  val getAcrualsInformation: HttpRequestBuilder = http("getAcrualsInformation")
+    .get("/ros/tenant-contract/api/v1/contract/b68553e1-9539-11ec-8118-0050569352f5/accruals?sortField=date&sortDirection=DESC&page=0&size=200")
+    .check(status.is(200))
+
+  val tenantContract: HttpRequestBuilder = http("tenantContract")
+    .post("/ros/tenant-contract/api/v1/receipt/form")
+    .body(StringBody("""{
+  "contractIds": [
+    "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  ]
+}"""))
+    .check(status.is(200))
+
+  val getTenantPayment: HttpRequestBuilder = http("getTenantPayment")
+    .get("/ros/tenant-contract/api/v1/contract/b68553e1-9539-11ec-8118-0050569352f5/payment")
     .check(status.is(200))
 }
 
